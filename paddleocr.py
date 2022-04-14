@@ -498,3 +498,6 @@ def main():
             for item in result:
                 item.pop('img')
                 logger.info(item)
+                
+if __name__ == "__main__":
+    main()
