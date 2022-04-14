@@ -33,6 +33,12 @@ from ppocr.postprocess import build_post_process
 import json
 logger = get_logger()
 
+def get_image_file_from_txt(txt_file, img_prefix):
+    img_lists = []
+    for json_line in open(txt_file):
+        line = json.loads(json_line)
+        img_lists.append(os.path.join(img_prefix, line['file_name']))
+    return img_lists
 
 class TextDetector(object):
     def __init__(self, args):
@@ -254,7 +260,11 @@ class TextDetector(object):
 
 if __name__ == "__main__":
     args = utility.parse_args()
-    image_file_list = get_image_file_list(args.image_dir)
+    txt_file = ""
+    img_prefix = ""
+    image_file_list = get_image_file_from_txt(txt_file, img_prefix)
+    #image_file_list = get_image_file_list(args.image_dir)
+
     text_detector = TextDetector(args)
     count = 0
     total_time = 0
@@ -286,12 +296,12 @@ if __name__ == "__main__":
         save_results.append(save_pred)
         logger.info(save_pred)
         logger.info("The predict time of {}: {}".format(image_file, elapse))
-        src_im = utility.draw_text_det_res(dt_boxes, image_file)
-        img_name_pure = os.path.split(image_file)[-1]
-        img_path = os.path.join(draw_img_save,
-                                "det_res_{}".format(img_name_pure))
-        cv2.imwrite(img_path, src_im)
-        logger.info("The visualized image saved in {}".format(img_path))
+#         src_im = utility.draw_text_det_res(dt_boxes, image_file)
+#         img_name_pure = os.path.split(image_file)[-1]
+#         img_path = os.path.join(draw_img_save,
+#                                 "det_res_{}".format(img_name_pure))
+#         cv2.imwrite(img_path, src_im)
+#         logger.info("The visualized image saved in {}".format(img_path))
 
     with open(os.path.join(draw_img_save, "det_results.txt"), 'w') as f:
         f.writelines(save_results)

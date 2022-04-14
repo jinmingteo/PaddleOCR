@@ -398,14 +398,23 @@ def main(args):
         img_list.append(img)
     try:
         rec_res, _ = text_recognizer(img_list)
-
+        
     except Exception as E:
         logger.info(traceback.format_exc())
         logger.info(E)
         exit()
-    for ino in range(len(img_list)):
-        logger.info("Predicts of {}:{}".format(valid_image_file_list[ino],
-                                               rec_res[ino]))
+    
+    # save output
+    os.makedirs('recognizer_results', exist_ok=True)
+    with open('recognizer_results/results.txt', 'w') as f:        
+        for ino in range(len(img_list)):
+            logger.info("Predicts of {}:{}".format(valid_image_file_list[ino],
+                                                   rec_res[ino]))
+            file_name = os.path.basename(valid_image_file_list[ino])
+            words, score = rec_res[ino][0], rec_res[ino][1] 
+            f.write(f"{file_name} {words} {score}\n")
+        f.close()
+    
     if args.benchmark:
         text_recognizer.autolog.report()
 
