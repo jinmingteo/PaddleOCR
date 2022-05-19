@@ -525,8 +525,9 @@ def get_center(model, eval_dataloader, post_process_class):
     return char_center
 
 
-def preprocess(is_train=False):
-    FLAGS = ArgsParser().parse_args()
+def preprocess(is_train=False, FLAGS=None):
+    if FLAGS is None:
+        FLAGS = ArgsParser().parse_args()
     profiler_options = FLAGS.profiler_options
     config = load_config(FLAGS.config)
     config = merge_config(config, FLAGS.opt)
